@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 const StudentProfiles = () => {
 
   const [students, setStudents] = useState([]);
-  const [searchedStudents, setSearchedStudent] = useState([]);
+  const [searchedStudents, setSearchedStudents] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
 
   useEffect(() => {
@@ -11,20 +11,19 @@ const StudentProfiles = () => {
       .then(res => res.json())
       .then(data => {
         setStudents(data.students);
-        setSearchedStudent(data.students);
+        setSearchedStudents(data.students);
       })
   }, []);
 
   const handleSearchStudent = () => {
-    const search = document.getElementById('search').value.toLowerCase();
+    const search = document.getElementById('searchByName').value.toLowerCase();
 
     const rest = students.filter(student => student.firstName.toLowerCase().includes(search) || student.lastName.toLowerCase().includes(search));
-    setSearchedStudent(rest)
+    setSearchedStudents(rest)
 
   }
 
   const handleToggleButtonEvent = (id) => {
-    console.log(id);
     if (!selectedStudent) {
       const selectedStudent = students.find(student => student.id === id);
       if (selectedStudent) {
@@ -45,50 +44,57 @@ const StudentProfiles = () => {
 
 
       const selectedStudentForAddTag = students.find(student => student.id === selected);
-      const checkStudent = selectedStudentForAddTag?.tagsContainer;
+      const checkStudent = selectedStudentForAddTag?.tagContainer;
 
       let updatedStudent = {};
       if (checkStudent) {
         const finalTags = [...checkStudent, newTag];
 
-        console.log(finalTags);
-        selectedStudentForAddTag.tagsContainer = finalTags;
+        selectedStudentForAddTag.tagContainer = finalTags;
 
         updatedStudent = selectedStudentForAddTag;
-
         const finalUpdate = students.filter(student => student.id !== selected);
-        console.log(finalUpdate);
 
-        setSearchedStudent([...finalUpdate, updatedStudent]);
+        setSearchedStudents([...finalUpdate, updatedStudent]);
         event.target.value = '';
 
       }
       else if (!checkStudent) {
-        selectedStudentForAddTag.tagsContainer = [newTag];
+        selectedStudentForAddTag.tagContainer = [newTag];
         updatedStudent = (selectedStudentForAddTag);
 
         const finalUpdate = students.filter(student => student.id !== selected);
-        console.log(finalUpdate);
-        console.log(updatedStudent);
-
-        setSearchedStudent([...finalUpdate, updatedStudent])
-        console.log(searchedStudents);
+        setSearchedStudents([...finalUpdate, updatedStudent])
         event.target.value = '';
       }
     }
-    
+  }
+
+  
+  const handleSearchStudentByTag = () => {
+    const search = document.getElementById('searchByTag').value.toLowerCase();
+
+    const rest = students.filter(student => student?.tagContainer?.includes(search));
+    if(rest){
+      setSearchedStudents(rest)
+    }
 
   }
 
   return (
     <div className='bg-[#f5f5f5]'>
       <div className='grid bg-white gap-6 grid-cols-1 p-11 justify-center items-center'>
-
         <input
           onChange={handleSearchStudent}
           type="text" className='bg-gray-50 h-16 text-2xl border border-gray-300 text-gray-900 rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-800 dark:text-white'
           placeholder='Search by name'
-          name="search" id="search" />
+          name="searchByName" id="searchByName" />
+
+        <input
+          onChange={handleSearchStudentByTag}
+          type="text" className='bg-gray-50 h-16 text-2xl border border-gray-300 text-gray-900 rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-800 dark:text-white'
+          placeholder='Search by tag'
+          name="searchByTag" id="searchByTag" />
 
         {
           searchedStudents?.map((student, index) => <div
@@ -106,7 +112,7 @@ const StudentProfiles = () => {
                 <p className='text-2xl mb-2 ml-5'>Company: {student.company}</p>
                 <p className='text-2xl mb-2 ml-5'>Skill: {student.skill}</p>
                 <p className='text-2xl mb-2 ml-5'>Average: {
-                  student?.grades.reduce(
+                  student.grades?.reduce(
                     (previousValue, currentValue) => +previousValue + +currentValue)
                 }%</p>
                 {
@@ -119,7 +125,7 @@ const StudentProfiles = () => {
 
                 <div>
                   {
-                    student.id && student?.tagsContainer?.map((tag, index1) => <div key={index1} className='inline-block w-[fit-content] bg-gray-200 m-2 p-3 rounded-md'>{tag}</div> )
+                    student.id && student?.tagContainer?.map((tag, index1) => <div key={index1} className='inline-block w-[fit-content] bg-gray-200 m-2 p-3 rounded-md'>{tag}</div>)
                   }
                   <input
                     onKeyUp={handleAddTagNameEvent}
