@@ -31,12 +31,54 @@ const StudentProfiles = () => {
         setSelectedStudent(selectedStudent);
       }
     }
-   else if(selectedStudent){
+    else if (selectedStudent) {
       setSelectedStudent(null)
     }
 
   }
-  console.log(selectedStudent);
+
+  const handleAddTagNameEvent = (event) => {
+
+    if (event.key === "Enter") {
+      const selected = event.target.id;
+      const newTag = event.target.value;
+
+
+      const selectedStudentForAddTag = students.find(student => student.id === selected);
+      const checkStudent = selectedStudentForAddTag?.tagsContainer;
+
+      let updatedStudent = {};
+      if (checkStudent) {
+        const finalTags = [...checkStudent, newTag];
+
+        console.log(finalTags);
+        selectedStudentForAddTag.tagsContainer = finalTags;
+
+        updatedStudent = selectedStudentForAddTag;
+
+        const finalUpdate = students.filter(student => student.id !== selected);
+        console.log(finalUpdate);
+
+        setSearchedStudent([...finalUpdate, updatedStudent]);
+        event.target.value = '';
+
+      }
+      else if (!checkStudent) {
+        selectedStudentForAddTag.tagsContainer = [newTag];
+        updatedStudent = (selectedStudentForAddTag);
+
+        const finalUpdate = students.filter(student => student.id !== selected);
+        console.log(finalUpdate);
+        console.log(updatedStudent);
+
+        setSearchedStudent([...finalUpdate, updatedStudent])
+        console.log(searchedStudents);
+        event.target.value = '';
+      }
+    }
+    
+
+  }
 
   return (
     <div className='bg-[#f5f5f5]'>
@@ -68,18 +110,29 @@ const StudentProfiles = () => {
                     (previousValue, currentValue) => +previousValue + +currentValue)
                 }%</p>
                 {
-                  selectedStudent?.id ===  student.id && selectedStudent.grades?.map((grade, index) => <div
+                  selectedStudent?.id === student.id && selectedStudent.grades?.map((grade, index) => <div
                     key={index}
                   >
                     <p className='text-xl'>test  {index + 1} <span className='ml-5'> {grade}%</span></p>
                   </div>)
                 }
 
+                <div>
+                  {
+                    student.id && student?.tagsContainer?.map((tag, index1) => <div key={index1} className='inline-block w-[fit-content] bg-gray-200 m-2 p-3 rounded-md'>{tag}</div> )
+                  }
+                  <input
+                    onKeyUp={handleAddTagNameEvent}
+                    type="text" className='h-16 text-2xl outline-none border-b-4 border-gray-300 text-gray-900 rounded-md  block w-full p-2.5 '
+                    placeholder='Add a tag'
+                    name="tagName" id={student.id} />
+                </div>
+
               </div>
             </div>
             <div onClick={() => handleToggleButtonEvent(student.id)}>
               {
-                selectedStudent?.id === student.id ?  <button className='text-7xl text-gray-700'>&#8722;</button> : <button className='text-7xl text-gray-700'>&#43;
+                selectedStudent?.id === student.id ? <button className='text-7xl text-gray-700'>&#8722;</button> : <button className='text-7xl text-gray-700'>&#43;
                 </button>
               }
             </div>
