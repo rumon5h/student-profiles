@@ -70,13 +70,17 @@ const StudentProfiles = () => {
     }
   }
 
-  
   const handleSearchStudentByTag = () => {
     const search = document.getElementById('searchByTag').value.toLowerCase();
 
     const rest = students.filter(student => student?.tagContainer?.includes(search));
-    if(rest){
+
+    const filter = rest.find(student => student?.tagContainer)
+    if(filter){
       setSearchedStudents(rest)
+    }
+    else if(!search){
+      setSearchedStudents(students)
     }
 
   }
