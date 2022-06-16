@@ -1,6 +1,6 @@
 # Student profile
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Linkedin profile[Linkedin profile](https://www.linkedin.com/in/rumon42243/).
 
 
 ### `Technology i use for this project`
@@ -9,7 +9,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 * JavaScript 
 * ES6
 * HTML
-* CSS
+* React Tailwind CSS
 * React hot toast
 
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 const StudentProfiles = () => {
 
@@ -56,6 +57,7 @@ const StudentProfiles = () => {
         const finalUpdate = students.filter(student => student.id !== selected);
 
         setSearchedStudents([...finalUpdate, updatedStudent]);
+        toast.success('Successfully added a new tag!', {id: 'tag-added'});
         event.target.value = '';
 
       }
@@ -64,7 +66,8 @@ const StudentProfiles = () => {
         updatedStudent = (selectedStudentForAddTag);
 
         const finalUpdate = students.filter(student => student.id !== selected);
-        setSearchedStudents([...finalUpdate, updatedStudent])
+        setSearchedStudents([...finalUpdate, updatedStudent]);
+        toast.success('Successfully added a new tag!', {id: 'tag-added-1'});
         event.target.value = '';
       }
     }
